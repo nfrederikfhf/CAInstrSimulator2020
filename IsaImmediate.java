@@ -7,8 +7,8 @@ public class IsaImmediate {
     static int progr[] = {
             // As minimal RISC-V assembler example
             0x00200093, // addi x1 x0 2
-            0x8030A213, // SLTI x4, x1,-3 ecpected 0
-            0x8000B313, // SLTIU x5, x1,4096 expected 1
+            0xFFD0A213, // SLTI x4, x1,-3 ecpected 0 
+            0x8000B293, // SLTIU x5, x1,4096 expected 1
             0x00300113, // addi x2 x0 3
             //0x002081b3, // add x3 x1 x2
     };
@@ -27,8 +27,9 @@ public class IsaImmediate {
             int funct3 = (instruction >> 12) & 0x07;
             int rs1 = (instruction >> 15) & 0x1f;
             int imm = (instruction >> 20);
-            long tempimm = imm;
-
+            long uimm = Long.parseLong(Integer.toBinaryString(imm), 2); //copies imm to a long i.e. unsigned 
+            
+    
 /* 
 addi: 0x13 function 3: 000
 slti: funct3: 010
@@ -51,21 +52,20 @@ xori:     func3: 100
                     }
                     break;
                 case 3: //SLTIU
-                    tempimm = tempimm >> (32-12);
-                    if(reg[rs1] < tempimm){
+                    if(reg[rs1] < uimm){
                         reg[rd] = 1;
                     } else{
                         reg[rd] = 0;
                     }
                     break;
                 case 4: //XORI
-                    reg[rd] = rs1 ^ (imm >> (32-12));
+                    reg[rd] = rs1 ^ (imm);
                     break;
                 case 6: //ORI
-                    reg[rd] = rs1 | (imm >> (32-12));
+                    reg[rd] = rs1 | (imm);
                     break;
                 case 7: //ANDI
-                    reg[rd] = rs1 & (imm >> (32-12));
+                    reg[rd] = rs1 & (imm);
                 default:
                 System.out.println("Function3 " + funct3 + " Doens't exist");
                     break;
