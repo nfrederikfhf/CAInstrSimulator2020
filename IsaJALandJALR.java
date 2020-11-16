@@ -23,20 +23,15 @@ class IsaJALandJALR{
                 int rd = (instr >> 7) & 0x01f;
                 int funct3 = (instr >> 10) & 0x7;
                 int rs1 = (instr >> 15) & 0x01f;
-                int imm = (instr >> 19);
-                int imm1 = 0;
-                int imm2 = 0;
-                int imm3 = 0;
-                int imm4 = 0;
+                int imm = (instr >> 20);
 
             switch(opcode){
                 case 0x6f:
+                //JAL
                     rd = (instr >> 7) & 0x01f;
-                    imm1 = (instr >> 12) & 0xff;
-                    imm2 = (instr >> 20) & 0x1;
-                    imm3 = (instr >> 21) & 0x3ff;
-                    imm4 = (instr >> 31);
+                    imm = (instr >> 12);
                 case 0x67:
+                //JALR
                     rd = (instr >> 7) & 0x01f;
                     funct3 = (instr >> 10) & 0x7;
                     rs1 = (instr >> 15) & 0x01f;
