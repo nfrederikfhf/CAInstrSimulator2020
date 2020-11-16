@@ -41,6 +41,9 @@ class IsaJALandJALR{
                 switch (opcode) {
     
                     case 0x6f:
+                    //JAL
+
+                    rd = pc+4;
                         
                         break;
                     default:
