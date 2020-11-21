@@ -1,7 +1,13 @@
-import sun.tools.serialver.resources.serialver;
+/**
+ * RISC-V Instruction Set Simulator
+ * <p>
+ * A tiny first step to get the simulator started. Can execute just a single
+ * RISC-V instruction.
+ *
+ * @author Martin Schoeberl (martin@jopdesign.com)
+ */
+public class IsaSim {
 
-public class IsaBranch {
- 
     static int pc;
     static int reg[] = new int[4];
 
@@ -19,41 +25,18 @@ public class IsaBranch {
 
         pc = 0;
 
-        while((pc >> 2) < progr.length){
+        for (; ; ) {
 
             int instr = progr[pc >> 2];
             int opcode = instr & 0x7f;
-            int imm = ((instr >> 25) << 5) | ((instr >> 7) & 0x1);  
-            int funct3 = (instr >> 12) & 0x7;
-            int rs1 = (instr >> 15) & 0x1f;
-            int rs2 = (instr >> 20) & 0x1f;
+            int rd = (instr >> 7) & 0x01f;
+            int rs1 = (instr >> 15) & 0x01f;
+            int imm = (instr >> 20);
 
             switch (opcode) {
 
-                case 0x63:
-                    switch(funct3){
-                    
-                    case 0x00:
-                    //BEQ
-
-                    case 0x01:
-                    //BNE 
-                    
-                    case 0x04:
-                    //BLT        
-                    
-                    case 0x05:
-                    //BGE
-
-                    case 0x06:
-                    //BLTU
-                    
-                    case 0x07:
-                    //BGEU
-
-                    default:
-                    System.out.println("function " + funct3 + " not a function");
-                }
+                case 0x13:
+                    reg[rd] = reg[rs1] + imm;
                     break;
                 default:
                     System.out.println("Opcode " + opcode + " not yet implemented");
@@ -61,7 +44,9 @@ public class IsaBranch {
             }
 
             pc += 4; // One instruction is four bytes
-            
+            if ((pc >> 2) >= progr.length) {
+                break;
+            }
             for (int i = 0; i < reg.length; ++i) {
                 System.out.print(reg[i] + " ");
             }
@@ -71,6 +56,5 @@ public class IsaBranch {
         System.out.println("Program exit");
 
     }
-
 
 }
