@@ -35,22 +35,33 @@ public class IsaBranch {
                     
                     case 0x00:
                     //BEQ
+                        if(reg[rs1] == reg[rs2]){
+                            pc = imm;
+                        }
 
                     case 0x01:
                     //BNE 
-                    
+                        if(reg[rs1] != reg[rs2]){
+                            pc = imm;
+                        }
                     case 0x04:
                     //BLT        
-                    
+                        if(reg[rs1] < reg[rs2]){
+                            pc = imm;
+                        }
                     case 0x05:
                     //BGE
 
                     case 0x06:
                     //BLTU
-                    
+                        if(reg[rs1] < reg[rs2]){
+                            pc = imm;
+                        }
                     case 0x07:
                     //BGEU
-
+                        if(reg[rs1] >= reg[rs2]){
+                            pc = imm;
+                        }
                     default:
                     System.out.println("function " + funct3 + " not a function");
                 }
