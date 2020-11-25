@@ -12,10 +12,8 @@ class IsaJALandJALR{
     
         public static void main(String[] args) {
     
-            System.out.println("Hello RISC-V World!");
-    
             pc = 0;
-    
+
             while((pc >> 2) < progr.length){
     
                 int instr = progr[pc >> 2];
@@ -36,16 +34,19 @@ class IsaJALandJALR{
                     funct3 = (instr >> 10) & 0x7;
                     rs1 = (instr >> 15) & 0x01f;
                     imm = (instr >> 19);
-            }    
+                }    
     
                 switch (opcode) {
-    
+                    
                     case 0x6f:
                     //JAL
-
+                    
+                    pc = imm;
                     rd = pc+4;
                         
-                        break;
+                    case 0x67: 
+                    //JALR
+
                     default:
                         System.out.println("Opcode " + opcode + " not yet implemented");
                         break;

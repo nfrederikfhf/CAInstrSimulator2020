@@ -15,7 +15,8 @@ public class IsaBranch {
 
     public static void main(String[] args) {
 
-        System.out.println("Hello RISC-V World!");
+        long lreg1 = 0;
+        long lreg2 = 0;
 
         pc = 0;
 
@@ -51,15 +52,21 @@ public class IsaBranch {
                         }
                     case 0x05:
                     //BGE
-
+                        if(reg[rs1] >= reg[rs2]){
+                            pc = imm;
+                        }
                     case 0x06:
                     //BLTU
-                        if(reg[rs1] < reg[rs2]){
+                        lreg1 = lreg1 | reg[rs1];
+                        lreg2 = lreg2 | reg[rs2];
+                        if(lreg1 < lreg2){
                             pc = imm;
                         }
                     case 0x07:
                     //BGEU
-                        if(reg[rs1] >= reg[rs2]){
+                        lreg1 = lreg1 | reg[rs1];
+                        lreg2 = lreg2 | reg[rs2];
+                        if(lreg1 >= lreg2){
                             pc = imm;
                         }
                     default:
