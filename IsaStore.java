@@ -1,6 +1,7 @@
-public class IsaALUIPC {
+public class IsaStore {
     static int pc;
     static int reg[] = new int[4];
+    static int memory[] = new int[256000];
 
     // Here the first program hard coded as an array
     static int progr[] = {
@@ -19,21 +20,25 @@ public class IsaALUIPC {
         while((pc >> 2) < progr.length){
 
             int instr = progr[pc >> 2];
-
             int opcode = instr & 0x7f;
-            int rd = (instr >> 7) & 0x01f;
-            int imm = (instr >> 12);
+            int funct3 = (instr >> 12) & 0x7;
+            int rs1 = (instr >> 15) & 0x01f;
+            int rs2 = (instr >>20) & 0x1f;
+            int imm = ((instr >> 7) & 0x1f) | ((instr >> 25) << 5);
 
-            switch (opcode) {
-
-                case 37: //LUI
-                    reg[rd] = imm << 12;
+            //opcode 0x23
+            switch (funct3) {
+                case 0:
+                    memory[(rs1 << imm)] = (reg[rs2] & 0xff);
                     break;
-                case 17: //AUIPC
-                    reg[rd] = pc + (imm << 12);
+                case 1:
+                    memory[(rs1 << imm)] = (reg[rs2] & 0xffff);
+                    break;
+                case 2: 
+                    memory[(rs1 << imm)] = reg[rs2];
                     break;
                 default:
-                    System.out.println("Opcode " + opcode + " not yet implemented");
+                    System.out.println("funct3 " + funct3 + " not yet implemented");
                     break;
             }
 
@@ -51,3 +56,7 @@ public class IsaALUIPC {
 
 }
     
+
+
+    
+
