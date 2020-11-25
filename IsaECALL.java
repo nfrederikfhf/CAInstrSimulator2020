@@ -36,7 +36,7 @@ public class IsaECALL {
                         System.out.println(reg[12]);
                         break;
                     case 4:
-                        System.out.println(reg[11]);
+                        System.out.println(String.valueOf(reg[11]));
                         break;
                     case 10:
                         for (i = 0; i < reg.length; ++i) {

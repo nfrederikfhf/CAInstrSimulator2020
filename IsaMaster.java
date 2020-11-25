@@ -40,12 +40,13 @@ public class IsaMaster {
                         funct3 = (instr >> 12) & 0x07;
                         rs1 = (instr >> 15) & 0x1f;
                         imm = (instr >> 20);
+                        break;
                     case 0x13:
                     //Immediate functions  
                         rd = (instr >> 7) & 0x01f;
                         rs1 = (instr >> 15) & 0x01f;
                         imm = (instr >> 20);
-                
+                        break;
                     case 0x17:
                     //AUIPC
                     
@@ -53,8 +54,7 @@ public class IsaMaster {
                         opcode = instr & 0x7f;
                         rd = (instr >> 7) & 0x01f;
                         imm = (instr >> 12);
-
-
+                        break;
                     case 0x23:
                     //STORE 
                         instr = progr[pc >> 2];
@@ -63,6 +63,7 @@ public class IsaMaster {
                         rs1 = (instr >> 15) & 0x01f;
                         rs2 = (instr >>20) & 0x1f;
                         imm = ((instr >> 7) & 0x1f) | ((instr >> 25) << 5);
+                        break;
                     case 0x33:
                     //R2R functions
                         rd = (instr >> 7) & 0x01f;
@@ -70,7 +71,7 @@ public class IsaMaster {
                         rs1 = (instr >> 15) & 0x01f;
                         rs2 = (instr >> 20) & 0x01f;
                         funct7 = (instr >> 25);
-                    
+                        break;
                     case 0x37:
                     //LUI
                     
@@ -78,7 +79,7 @@ public class IsaMaster {
                         opcode = instr & 0x7f;
                         rd = (instr >> 7) & 0x01f;
                         imm = (instr >> 12);
-
+                        break;
 
                     case 0x63:
                     //BRANCH Functions
@@ -89,17 +90,19 @@ public class IsaMaster {
                         funct3 = (instr >> 12) & 0x7;
                         rs1 = (instr >> 15) & 0x1f;
                         rs2 = (instr >> 20) & 0x1f;
-
+                        break;
                     case 0x67:
                     //JALR
                         rd = (instr >> 7) & 0x01f;
                         funct3 = (instr >> 10) & 0x7;
                         rs1 = (instr >> 15) & 0x01f;
                         imm = (instr >> 19);
+                        break;
                     case 0x6f:
                     //JAL
                         rd = (instr >> 7) & 0x01f;
                         imm = (instr >> 12);
+                        break;
                     case 0x73:
                     //ECALL
                         instr = progr[pc >> 2];
@@ -108,6 +111,10 @@ public class IsaMaster {
                         rs1 = (instr >> 15) & 0x01f;
                         imm = (instr >> 20);
                         funct12 = instr >> 20;
+                        break;
+                    default:
+                        System.out.println("Opcode " + opcode + " not implemented");
+                        break;
                 }
                 
                 switch (opcode) {
@@ -271,22 +278,25 @@ public class IsaMaster {
                                 if(reg[rs1] == reg[rs2]){
                                     pc = imm;
                                 }
-        
+                                break;
                             case 0x01:
                             //BNE 
                                 if(reg[rs1] != reg[rs2]){
                                     pc = imm;
                                 }
+                                break;
                             case 0x04:
                             //BLT        
                                 if(reg[rs1] < reg[rs2]){
                                     pc = imm;
                                 }
+                                break;
                             case 0x05:
                             //BGE
                                 if(reg[rs1] >= reg[rs2]){
                                     pc = imm;
                                 }
+                                break;
                             case 0x06:
                             //BLTU
                                 lreg1 = lreg1 | reg[rs1];
@@ -294,6 +304,7 @@ public class IsaMaster {
                                 if(lreg1 < lreg2){
                                     pc = imm;
                                 }
+                                break;
                             case 0x07:
                             //BGEU
                                 lreg1 = lreg1 | reg[rs1];
@@ -301,16 +312,21 @@ public class IsaMaster {
                                 if(lreg1 >= lreg2){
                                     pc = imm;
                                 }
+                                break;
+                            default:
+                                System.out.println("Function3 " + funct3 + " Doens't exist");
+                                break;
+                        }
                     case 0x67:
                         //JALR
                         reg[rd] = pc + 4;
                         pc = reg[rs1] + imm;
-                    
+                        break;
                     case 0x6f:
                         //JAL
                         reg[rd] = pc+4;
                         pc = imm;
-                    
+                        break;
                     case 0x73:
                         //ECALL
                         if(funct12 == 0){
@@ -320,7 +336,7 @@ public class IsaMaster {
                                         System.out.println(reg[12]);
                                         break;
                                     case 4:
-                                        System.out.println(reg[11]);
+                                        System.out.println(String.valueOf(reg[11]));
                                         break;
                                     case 10:
                                         for (i = 0; i < reg.length; ++i) {
