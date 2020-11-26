@@ -3,7 +3,7 @@ public class IsaMaster {
         static int pc;
         static int reg[] = new int[6];
         static int memory[] = new int[256000];
-
+        
         static int progr[] = {
             
 
