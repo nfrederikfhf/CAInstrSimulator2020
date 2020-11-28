@@ -13,11 +13,11 @@ public class IsaMaster {
         static int reg[] = new int[32];
         static int memory[] = new int[256000];
         
-        static int progr[] = new int[10];
+        static int progr[] = new int[200];
         public static void main(String[] args) throws FileNotFoundException, IOException {
             
             try {
-                File file = new File("C:\\Users\\gthom\\Downloads\\cae-lab-master\\cae-lab-master\\finasgmt\\tests\\task1\\shift.bin");
+                File file = new File("C:\\Users\\gthom\\Downloads\\cae-lab-master\\cae-lab-master\\finasgmt\\tests\\task3\\loop.bin");
                 
                 FileInputStream reader = new FileInputStream(file);
                 
@@ -80,6 +80,8 @@ public class IsaMaster {
                         funct3 = (instr >> 12) & 0x07;
                         rs1 = (instr >> 15) & 0x1f;
                         imm = (instr >> 20);
+
+                        
                         break;
                     case 0x13:
                     //Immediate functions  
@@ -89,6 +91,8 @@ public class IsaMaster {
                         imm = (instr >> 20);
                         uimm = Long.parseLong(Integer.toBinaryString(imm), 2); //copies imm to a long i.e. unsigned 
                         shamt = imm & 0x1f;
+
+                        
                         break;
                     case 0x17:
                     //AUIPC
@@ -114,6 +118,8 @@ public class IsaMaster {
                         rs1 = (instr >> 15) & 0x01f;
                         rs2 = (instr >> 20) & 0x01f;
                         funct7 = (instr >> 25);
+
+
                         break;
                     case 0x37:
                     //LUI
@@ -121,7 +127,10 @@ public class IsaMaster {
                         instr = progr[pc >> 2];
                         opcode = instr & 0x7f;
                         rd = (instr >> 7) & 0x01f;
-                        imm = (instr >> 12);
+                        imm = (instr >>> 12);
+                        //uimm = Long.parseLong(Integer.toBinaryString(imm), 2);
+
+                       
                         break;
 
                     case 0x63:
@@ -199,9 +208,6 @@ public class IsaMaster {
                         switch (funct3) {
                             case 0: //addi
                                 reg[rd] = reg[rs1] + imm;
-                                System.out.println("reg[" + rs1 + "]: " + reg[rs1]);
-                                System.out.println("rd: " + rd);
-                                System.out.println("reg[" + rs1 + "]: " + reg[rd]);
                                 break;
                             case 1: // SLLI
                                 imm = 0x000 | shamt; // making sure signed bit is 0
@@ -241,7 +247,8 @@ public class IsaMaster {
                                 System.out.println("Function3 " + funct3 + " Doens't exist");
                                 break;
                         }
-                    
+                        break;
+                
                     case 0x17:
                         //AUIPC
                         reg[rd] = pc + (imm << 12);
@@ -405,7 +412,6 @@ public class IsaMaster {
                     System.out.print(reg[i] + " ");
                 }
                 System.out.println();
-                System.out.println(funct3);
                
             }
     

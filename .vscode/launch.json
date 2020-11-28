@@ -1,0 +1,105 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaALUIPC<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaALUIPC",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaBranch<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaBranch",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaECALL<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaECALL",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaFileReader<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaFileReader",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaImmediate<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaImmediate",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaJALandJALR<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaJALandJALR",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaLoad<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaLoad",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaMaster<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaMaster",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaOutput<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaOutput",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaR2RO<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaR2RO",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaSim<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaSim",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaStore<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaStore",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-IsaTemplate<CAInstrSimulator2020_45e54ef8>",
+            "request": "launch",
+            "mainClass": "IsaTemplate",
+            "projectName": "CAInstrSimulator2020_45e54ef8"
+        }
+    ]
+}
