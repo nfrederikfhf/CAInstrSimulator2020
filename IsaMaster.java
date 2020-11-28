@@ -86,7 +86,10 @@ public class IsaMaster {
 
                         instr = progr[pc >> 2];
                         opcode = instr & 0x7f;
-                        imm = ((instr >> 25) << 5) | ((instr >> 7) & 0x1f);  
+                        imm = (instr >> 19) & 0xfffff000 //gets bit 32 to bit 12
+                            |(((instr >> 7) & 0x1) << 11) //gets bit 7 to bit 11
+                            |(((instr >> 25) & 0x3f) << 5) //gets bit 30-25 to bit 10-5
+                            |(((instr >> 8) & 0xf) << 1); // gets bit 11-8 to bit 4-1  
                         funct3 = (instr >> 12) & 0x7;
                         rs1 = (instr >> 15) & 0x1f;
                         rs2 = (instr >> 20) & 0x1f;
@@ -331,30 +334,14 @@ public class IsaMaster {
                         //ECALL
                         if(funct12 == 0){
                             switch (reg[11]) {
-                
-                                    case 1:
-                                        System.out.println(reg[12]);
-                                        break;
-                                    case 4:
-                                        System.out.println(String.valueOf(reg[11]));
-                                        break;
                                     case 10:
                                         for (i = 0; i < reg.length; ++i) {
                                             System.out.print(reg[i] + " ");
                                         }
                                         System.exit(0);
                                         break;
-                                    case 11: 
-                                        System.out.println((char)(reg[12]));
-                                        break;
-                                    case 17:
-                                        for (i = 0; i < reg.length; ++i) {
-                                            System.out.print(reg[i] + " ");
-                                        }
-                                        System.exit(reg[12]);
-                                        break;
                                     default:
-                                        System.out.println("funct12 " + funct12 + " not yet implemented");
+                                        System.out.println("a0: " + reg[11] + " can only be 10");
                                         break;
                                 }
                             }   

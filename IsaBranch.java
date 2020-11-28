@@ -24,7 +24,10 @@ public class IsaBranch {
 
             int instr = progr[pc >> 2];
             int opcode = instr & 0x7f;
-            int imm = ((instr >> 25) << 5) | ((instr >> 7) & 0x1);  
+            int imm = (instr >> 19) & 0xfffff000 //gets bit 32 to bit 12
+                    |(((instr >> 7) & 0x1) << 11) //gets bit 7 to bit 11
+                    |(((instr >> 25) & 0x3f) << 5) //gets bit 30-25 to bit 10-5
+                    |(((instr >> 8) & 0xf) << 1); // gets bit 11-8 to bit 4-1  
             int funct3 = (instr >> 12) & 0x7;
             int rs1 = (instr >> 15) & 0x1f;
             int rs2 = (instr >> 20) & 0x1f;
