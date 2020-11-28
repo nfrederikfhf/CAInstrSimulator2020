@@ -20,8 +20,10 @@ public class IsaFileReader {
             int i = 0;
 
             while ((byt = reader.read()) != -1) {
+                System.out.println(Integer.toHexString(byt));
                 
                 progr[j] |= (byt << offset);
+                System.out.println(Integer.toHexString(progr[j]));
                 offset += 8;
                 i += 1;
                 if(i >= 4){

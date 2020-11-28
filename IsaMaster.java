@@ -1,35 +1,75 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.FileOutputStream; 
+import java.io.FileNotFoundException;
+
 public class IsaMaster {
 
+
+    
+
         static int pc;
-        static int reg[] = new int[6];
+        static int reg[] = new int[32];
         static int memory[] = new int[256000];
         
-        static int progr[] = {
+        static int progr[] = new int[10];
+        public static void main(String[] args) throws FileNotFoundException, IOException {
             
+            try {
+                File file = new File("C:\\Users\\gthom\\Downloads\\cae-lab-master\\cae-lab-master\\finasgmt\\tests\\task1\\shift.bin");
+                
+                FileInputStream reader = new FileInputStream(file);
+                
+                
+                int byt;
+                int j = 0;
+                int offset = 0;
+                int i = 0;
+    
+                while ((byt = reader.read()) != -1) {
+                    
+                    progr[j] |= (byt << offset);
+                    
+                    offset += 8;
+                    i += 1;
+                    if(i >= 4){
+                        j += 1;
+                        i = 0; 
+                        offset = 0;
+                    }
+                
+                }
+    
+                reader.close();
+               
+    
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
 
-        };
-        public static void main(String[] args) {
 
             long lreg1 = 0;
             long lreg2 = 0;
             int i;
             int temp = 0;
+            int rd = 0;
+            int funct3 = 0;
+            int rs1 = 0;
+            int rs2 = 0;
+            int funct7 = 0;
+            int imm = 0;
+            int funct12 = 0;
+            long uimm = 0;
+            int shamt = 0;
     
             pc = 0;
     
             while((pc >> 2) < progr.length){
     
-                int instr = 0;
-                int opcode = 0;
-                int rd = 0;
-                int funct3 = 0;
-                int rs1 = 0;
-                int rs2 = 0;
-                int funct7 = 0;
-                int imm = 0;
-                int funct12 = 0;
-                long uimm = 0;
-                int shamt = 0;
+                int instr = progr[pc >> 2];
+                int opcode = instr & 0x7f;
+                
                 
                 switch(opcode){
                 //Switches formats relative to opcode        
@@ -43,9 +83,12 @@ public class IsaMaster {
                         break;
                     case 0x13:
                     //Immediate functions  
-                        rd = (instr >> 7) & 0x01f;
-                        rs1 = (instr >> 15) & 0x01f;
+                        rd = (instr >> 7) & 0x1f;
+                        funct3 = (instr >> 12) & 0x07;
+                        rs1 = (instr >> 15) & 0x1f;
                         imm = (instr >> 20);
+                        uimm = Long.parseLong(Integer.toBinaryString(imm), 2); //copies imm to a long i.e. unsigned 
+                        shamt = imm & 0x1f;
                         break;
                     case 0x17:
                     //AUIPC
@@ -104,7 +147,10 @@ public class IsaMaster {
                     case 0x6f:
                     //JAL
                         rd = (instr >> 7) & 0x01f;
-                        imm = (instr >> 12);
+                        imm = (instr >> 31) & 0x1 
+                        |((instr >> 12) & 0xff) 
+                        |((instr >> 20) & 0x1) 
+                        |((instr >> 21) & 0x3ff);
                         break;
                     case 0x73:
                     //ECALL
@@ -149,10 +195,13 @@ public class IsaMaster {
                     } 
 
                     case 0x13:
-                        //ADDI
+                        //IMM
                         switch (funct3) {
                             case 0: //addi
                                 reg[rd] = reg[rs1] + imm;
+                                System.out.println("reg[" + rs1 + "]: " + reg[rs1]);
+                                System.out.println("rd: " + rd);
+                                System.out.println("reg[" + rs1 + "]: " + reg[rd]);
                                 break;
                             case 1: // SLLI
                                 imm = 0x000 | shamt; // making sure signed bit is 0
@@ -343,8 +392,8 @@ public class IsaMaster {
                                     default:
                                         System.out.println("a0: " + reg[11] + " can only be 10");
                                         break;
-                                }
-                            }   
+                            }
+                        }   
 
                     default:
                         System.out.println("Opcode " + opcode + "not implemented");
@@ -356,10 +405,33 @@ public class IsaMaster {
                     System.out.print(reg[i] + " ");
                 }
                 System.out.println();
+                System.out.println(funct3);
+               
             }
     
             System.out.println("Program exit");
-    
+
+            try {
+        
+                FileOutputStream writer = new FileOutputStream("C:\\Users\\gthom\\Downloads\\cae-lab-master\\cae-lab-master\\finasgmt\\tests\\task1\\test1.txt");
+                int offset = 0;
+        
+                    
+                    for (i = 0; i < reg.length; i++){
+                        for (int j = 0; j < 4; j++){
+                            writer.write((reg[i] >> offset) & 0xff);
+                            offset += 8;
+                        }
+                        offset = 0;
+                    }
+        
+        
+                    writer.close();
+        
+            } catch (Exception e){System.out.println(e); }   
+        
         }
     
 }
+    
+

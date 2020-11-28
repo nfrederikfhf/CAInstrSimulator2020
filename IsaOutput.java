@@ -44,7 +44,7 @@ public class IsaOutput{
             
             for (i = 0; i < reg.length; i++){
                 for (j = 0; j < 4; j++){
-                    writer.write(((reg[i] >> offset) & 0xff) >>> reg[0]/reg.length);
+                    writer.write((reg[i] >> offset) & 0xff);
                     offset += 8;
                 }
                 offset = 0;

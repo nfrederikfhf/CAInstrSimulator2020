@@ -27,7 +27,10 @@ class IsaJALandJALR{
                 case 0x6f:
                 //JAL
                     rd = (instr >> 7) & 0x01f;
-                    imm = (instr >> 12);
+                    imm =  (instr >> 31) & 0x1 
+                    |((instr >> 12) & 0xff) 
+                    |((instr >> 20) & 0x1) 
+                    |((instr >> 21) & 0x3ff); 
                 case 0x67:
                 //JALR
                     rd = (instr >> 7) & 0x01f;
