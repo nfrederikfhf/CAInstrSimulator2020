@@ -396,11 +396,13 @@ public class IsaMaster {
                     case 0x67:
                         //JALR
                         System.out.println("instr: " + Integer.toHexString(instr));
-                        temp = pc + 4;
+                        temp = pc + 8;
                         if(rd == 0){ //pc=(x[rs1]+sext(offset))&∼1
-                            pc = (reg[rs1] + imm - 4) << 1;
+                            pc = (reg[rs1] + imm - 8);
+                            //pc = (reg[rs1] + imm - 4)<<1;
                         }else{
-                            pc = (reg[rs1] + imm - 4) << 1;
+                            pc = (reg[rs1] + imm - 8);
+                            //pc = (reg[rs1] + imm - 4)<<1;
                             reg[rd] = temp;
                         }
                         break;
