@@ -11,13 +11,13 @@ public class IsaMaster {
 
         static int pc;
         static int reg[] = new int[32];
-        static int memory[] = new int[256000];
+        static int memory[] = new int[1024*1024];
         
         static int progr[] = new int[200];
         public static void main(String[] args) throws FileNotFoundException, IOException {
             
             try {
-                File file = new File("C:\\Users\\gthom\\Downloads\\cae-lab-master\\cae-lab-master\\finasgmt\\tests\\task3\\loop.bin");
+                File file = new File("C:\\Users\\gthom\\Downloads\\loop.bin");
                 
                 FileInputStream reader = new FileInputStream(file);
                 
@@ -62,7 +62,9 @@ public class IsaMaster {
             int funct12 = 0;
             long uimm = 0;
             int shamt = 0;
-    
+            reg[2] = 0x7ffffff0;
+            reg[3] = 0x10000000;
+            
             pc = 0;
     
             while((pc >> 2) < progr.length){
@@ -156,15 +158,16 @@ public class IsaMaster {
                     case 0x6f:
                     //JAL
                         rd = (instr >> 7) & 0x01f;
-                        imm = (instr >> 31) & 0x1 
-                        |((instr >> 12) & 0xff) 
-                        |((instr >> 20) & 0x1) 
-                        |((instr >> 21) & 0x3ff);
+                        imm = (instr >> 11) & 0xfff00000 
+                        |(instr & 0xff000) 
+                        |((instr & 0x100000) >> 9)
+                        |((instr & 0x7fe00000) >> 20);
+                        System.out.println(imm);
                         break;
                     case 0x73:
                     //ECALL
-                        instr = progr[pc >> 2];
-                        opcode = instr & 0x7f;
+                        //instr = progr[pc >> 2];
+                        //opcode = instr & 0x7f;
                         rd = (instr >> 7) & 0x01f;
                         rs1 = (instr >> 15) & 0x01f;
                         imm = (instr >> 20);
@@ -179,16 +182,18 @@ public class IsaMaster {
     
                     case 0x3:
                     //LOAD
+                    System.out.println("instr: " + Integer.toHexString(instr));
                     switch (funct3) {
                         case 0: //LB
-                            reg[rd] = memory[rs1] & (0xFF << imm); //loading 8 bits
+                            reg[rd] = memory[reg[rs1] + imm] & (0xFF << imm); //loading 8 bits
                             break;
                         case 1: //LH
-                            temp = memory[rs1] & (0xFFFF << imm); // loading 16 bits into temp
+                            temp = memory[reg[rs1] + imm] & (0xFFFF << imm); // loading 16 bits into temp
                             reg[rd] = (temp >> 16); //sign extending to 32 bits
                             break;
                         case 2: //LW
-                            reg[rd] = memory[rs1];
+                            
+                            reg[rd] = memory[reg[rs1] + imm];
                             break;
                         case 4: //LBU
                             temp = memory[rs1] & 0xFF;
@@ -201,12 +206,17 @@ public class IsaMaster {
                         default:
                             System.out.println("Not a load instruction");
                             break;
-                    } 
+                    }
+                    break; 
 
                     case 0x13:
                         //IMM
+                        System.out.println("instr: " + Integer.toHexString(instr));
                         switch (funct3) {
                             case 0: //addi
+                                //System.out.println("imm " + imm);
+                                //System.out.println("rs1 " + rs1);
+                                //System.out.println("rd " + rd);
                                 reg[rd] = reg[rs1] + imm;
                                 break;
                             case 1: // SLLI
@@ -243,6 +253,7 @@ public class IsaMaster {
                                 break;
                             case 7: //ANDI
                                 reg[rd] = rs1 & (imm);
+                                break;
                             default:
                                 System.out.println("Function3 " + funct3 + " Doens't exist");
                                 break;
@@ -251,27 +262,31 @@ public class IsaMaster {
                 
                     case 0x17:
                         //AUIPC
+                        System.out.println("instr: " + Integer.toHexString(instr));
                         reg[rd] = pc + (imm << 12);
                         break;
                         
 
                     case 0x23:
                         //STORE
+                        System.out.println("instr: " + Integer.toHexString(instr));
                         switch (funct3) {
-                            case 0:
-                                memory[(rs1 << imm)] = (reg[rs2] & 0xff);
+                            case 0: //SB
+                                memory[(reg[rs1] + imm)] = (reg[rs2] & 0xff);
                                 break;
-                            case 1:
-                                memory[(rs1 << imm)] = (reg[rs2] & 0xffff);
+                            case 1: //SH
+                                memory[(reg[rs1] + imm)] = (reg[rs2] & 0xffff);
                                 break;
-                            case 2: 
-                                memory[(rs1 << imm)] = reg[rs2];
+                            case 2: //SW
+                                memory[(reg[rs1] + imm)] = reg[rs2];
                                 break;
                             default:
                                 System.out.println("funct3 " + funct3 + " not yet implemented");
                                 break;
                         }
+                        break;
                     case 0x33:
+                        System.out.println("instr: " + Integer.toHexString(instr));
                         //ADD
                         if (funct3 == 0x00 && funct7 == 0x00){
                             reg[rd] = reg[rs1] + reg[rs2];
@@ -322,38 +337,39 @@ public class IsaMaster {
                         if(funct3 == 0x05 && funct7 == 0x20){
                             reg[rd] = (reg[rs1]>>reg[rs2]);    
                         }
-    
                         break;
                     case 0x37:
                         //LUI
+                        System.out.println("instr: " + Integer.toHexString(instr));
                         reg[rd] = imm << 12;
                         break;
                     case 0x63:
-                        //BRANCH Functions    
+                        //BRANCH Functions  
+                        System.out.println("instr: " + Integer.toHexString(instr));  
                         switch(funct3){
                     
                             case 0x00:
                             //BEQ
                                 if(reg[rs1] == reg[rs2]){
-                                    pc = imm;
+                                    pc += imm - 4;
                                 }
                                 break;
                             case 0x01:
                             //BNE 
                                 if(reg[rs1] != reg[rs2]){
-                                    pc = imm;
+                                    pc += imm - 4;
                                 }
                                 break;
                             case 0x04:
                             //BLT        
                                 if(reg[rs1] < reg[rs2]){
-                                    pc = imm;
+                                    pc += imm - 4;
                                 }
                                 break;
                             case 0x05:
                             //BGE
                                 if(reg[rs1] >= reg[rs2]){
-                                    pc = imm;
+                                    pc += imm - 4;
                                 }
                                 break;
                             case 0x06:
@@ -361,7 +377,7 @@ public class IsaMaster {
                                 lreg1 = lreg1 | reg[rs1];
                                 lreg2 = lreg2 | reg[rs2];
                                 if(lreg1 < lreg2){
-                                    pc = imm;
+                                    pc += imm - 4;
                                 }
                                 break;
                             case 0x07:
@@ -369,39 +385,55 @@ public class IsaMaster {
                                 lreg1 = lreg1 | reg[rs1];
                                 lreg2 = lreg2 | reg[rs2];
                                 if(lreg1 >= lreg2){
-                                    pc = imm;
+                                    pc += imm - 4;
                                 }
                                 break;
                             default:
                                 System.out.println("Function3 " + funct3 + " Doens't exist");
                                 break;
                         }
+                        break;
                     case 0x67:
                         //JALR
-                        reg[rd] = pc + 4;
-                        pc = reg[rs1] + imm;
+                        System.out.println("instr: " + Integer.toHexString(instr));
+                        temp = pc + 4;
+                        if(rd == 0){ //pc=(x[rs1]+sext(offset))&∼1
+                            pc = (reg[rs1] + imm - 4) << 1;
+                        }else{
+                            pc = (reg[rs1] + imm - 4) << 1;
+                            reg[rd] = temp;
+                        }
                         break;
                     case 0x6f:
                         //JAL
-                        reg[rd] = pc+4;
-                        pc = imm;
+                        System.out.println("instr: " + Integer.toHexString(instr));
+                        if(rd == 0){
+                            pc += imm - 4;
+                        } else{
+                            reg[rd] = pc + 8; 
+                            pc += imm - 4;
+                        }
                         break;
                     case 0x73:
                         //ECALL
+                        System.out.println("instr: " + Integer.toHexString(instr));
+                        
                         if(funct12 == 0){
-                            switch (reg[11]) {
+                            switch (reg[10]) {
                                     case 10:
                                         for (i = 0; i < reg.length; ++i) {
                                             System.out.print(reg[i] + " ");
                                         }
+                                        System.out.println();
+                                        System.out.println("BYE");
                                         System.exit(0);
                                         break;
                                     default:
-                                        System.out.println("a0: " + reg[11] + " can only be 10");
+                                        System.out.println("a0: " + reg[10] + " can only be 10");
                                         break;
                             }
-                        }   
-
+                        }
+                        break;
                     default:
                         System.out.println("Opcode " + opcode + "not implemented");
                         break;
